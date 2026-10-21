@@ -1,0 +1,23 @@
+{
+  "name": "coopanion-voice",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pluggable text-to-speech for the Coopanion desktop pet: local GPT-SoVITS, OpenAI, or any HTTP TTS API, with a settings panel, a browser player (volume/pitch) and a supervisor that starts the local model with the pet.",
+  "license": "AGPL-3.0-or-later",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "demo": "tsx examples/server.ts",
+    "say": "tsx examples/say.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

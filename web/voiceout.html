@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>语音输出</title>
+<link rel="stylesheet" href="voiceout.css">
+</head>
+<body class="voiceout-page">
+<main>
+  <header class="vo-head">
+    <div class="vo-headtext">
+      <h1 data-i18n="title"></h1>
+      <p class="vo-sub" data-i18n="sub"></p>
+    </div>
+    <span class="vo-service" id="service"><i></i><span id="serviceText"></span></span>
+  </header>
+
+  <section class="vo-card">
+    <div class="vo-row">
+      <label class="vo-label" for="on" data-i18n="enabled"></label>
+      <input type="checkbox" id="on" class="vo-switch">
+    </div>
+    <div class="vo-block">
+      <span class="vo-label" data-i18n="read"></span>
+      <div class="vo-seg" id="read" role="group">
+        <button type="button" data-read="all" data-i18n="readAll"></button>
+        <button type="button" data-read="speak" data-i18n="readSpeak"></button>
+        <button type="button" data-read="off" data-i18n="readOff"></button>
+      </div>
+      <p class="vo-note" id="readHint"></p>
+    </div>
+  </section>
+
+  <section class="vo-card">
+    <div class="vo-row">
+      <span class="vo-label" data-i18n="service"></span>
+      <span class="vo-phase" id="servicePhase"></span>
+    </div>
+    <div class="vo-actions">
+      <button type="button" class="vo-btn" id="serviceStart"></button>
+      <button type="button" class="vo-btn" id="serviceStop" data-i18n="stop"></button>
+      <label class="vo-check"><input type="checkbox" id="auto"><span data-i18n="serviceAuto"></span></label>
+    </div>
+    <p class="vo-note" id="serviceDetail"></p>
+  </section>
+
+  <section class="vo-card">
+    <div class="vo-row">
+      <label class="vo-label" for="voice" data-i18n="voice"></label>
+      <select id="voice"></select>
+    </div>
+    <div class="vo-block">
+      <div class="vo-row">
+        <label class="vo-label" for="speed" data-i18n="speed"></label>
+        <input type="range" id="speed" min="0.6" max="1.6" step="0.05">
+        <output class="vo-val" id="speedVal"></output>
+      </div>
+      <div class="vo-row">
+        <label class="vo-label" for="volume" data-i18n="volume"></label>
+        <input type="range" id="volume" min="0" max="1" step="0.05">
+        <output class="vo-val" id="volumeVal"></output>
+      </div>
+      <div class="vo-row">
+        <label class="vo-label" for="pitch" data-i18n="pitch"></label>
+        <input type="range" id="pitch" min="-6" max="6" step="1">
+        <output class="vo-val" id="pitchVal"></output>
+      </div>
+    </div>
+  </section>
+
+  <footer class="vo-foot">
+    <button type="button" class="vo-preview" id="preview" data-i18n="preview"></button>
+    <p class="vo-hint" id="hint" data-i18n="hint"></p>
+    <p class="vo-saved" id="saved" aria-live="polite"></p>
+  </footer>
+</main>
+<script type="module" src="voiceout.js"></script>
+</body>
+</html>

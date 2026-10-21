@@ -1,0 +1,78 @@
+/* The voice output settings page: a column of cards, light or dark by the system. */
+:root{
+  --bg:#F3F2F6; --surface:#FFFFFF; --text:#1B1626; --muted:#6A6577; --line:#E2DFE8;
+  --accent:#00A870; --danger:#E5484D; --warn:#BA7517;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0D1117; --surface:#151A22; --text:#E9EDF2; --muted:#8C95A3; --line:#252C37;
+    --accent:#2FD59B; --danger:#FF6369; --warn:#FAC775;
+    color-scheme: dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; overflow:auto;
+  background:var(--bg); color:var(--text);
+  font:14px/1.5 -apple-system, "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+  padding:20px 20px 28px;
+}
+main{max-width:520px; margin:0 auto; display:flex; flex-direction:column; gap:14px}
+
+.vo-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px}
+.vo-headtext{min-width:0}
+.vo-head h1{margin:0 0 4px; font-size:19px; font-weight:500}
+.vo-sub{margin:0; font-size:12.5px; line-height:1.5; color:var(--muted)}
+.vo-service{flex:none; display:inline-flex; align-items:center; gap:6px; margin-top:2px; font-size:12px; color:var(--muted); max-width:190px; line-height:1.4}
+.vo-service i{flex:none; width:7px; height:7px; border-radius:50%; background:var(--muted)}
+.vo-service.ok i{background:var(--accent)}
+.vo-service.ok{color:var(--accent)}
+.vo-service.down i{background:var(--danger)}
+.vo-service span{overflow:hidden; text-overflow:ellipsis}
+
+.vo-card{border:1px solid var(--line); border-radius:12px; background:var(--surface); padding:14px 16px; display:flex; flex-direction:column; gap:12px}
+.vo-row{display:flex; align-items:center; gap:12px}
+.vo-row .vo-label{flex:1; min-width:0; font-size:14px; cursor:default}
+.vo-block{display:flex; flex-direction:column; gap:10px}
+.vo-block > .vo-label{font-size:14px}
+.vo-note{margin:0; font-size:12.5px; line-height:1.55; color:var(--muted)}
+
+.vo-seg{display:flex; gap:6px; flex-wrap:wrap}
+.vo-seg button{font:inherit; font-size:13px; cursor:pointer; padding:6px 12px; border-radius:9px; border:1px solid var(--line); background:var(--surface); color:var(--text); transition:border-color .15s, background-color .15s}
+.vo-seg button:hover{border-color:var(--accent)}
+.vo-seg button[aria-pressed="true"]{border-color:var(--accent); background:color-mix(in srgb, var(--accent) 14%, var(--surface))}
+
+.vo-switch{appearance:none; flex:none; width:40px; height:23px; margin:0; border-radius:12px; cursor:pointer; background:color-mix(in srgb, var(--text) 22%, transparent); position:relative; transition:background-color .15s}
+.vo-switch::after{content:''; position:absolute; top:2.5px; left:2.5px; width:18px; height:18px; border-radius:50%; background:var(--surface); transition:transform .15s}
+.vo-switch:checked{background:var(--accent)}
+.vo-switch:checked::after{transform:translateX(17px)}
+
+select, input[type="range"], output{font:inherit; color:var(--text)}
+select{max-width:210px; padding:5px 8px; border-radius:8px; border:1px solid var(--line); background:var(--surface)}
+input[type="range"]{flex:1; min-width:0; height:22px; margin:0; appearance:none; background:transparent; cursor:pointer}
+input[type="range"]::-webkit-slider-runnable-track{height:4px; border-radius:2px; background:color-mix(in srgb, var(--text) 18%, transparent)}
+input[type="range"]::-webkit-slider-thumb{appearance:none; width:15px; height:15px; margin-top:-5.5px; border-radius:50%; background:var(--accent); border:2px solid var(--surface); box-shadow:0 0 0 1px color-mix(in srgb, var(--text) 12%, transparent)}
+input[type="range"]::-moz-range-track{height:4px; border-radius:2px; background:color-mix(in srgb, var(--text) 18%, transparent)}
+input[type="range"]::-moz-range-thumb{width:13px; height:13px; border-radius:50%; background:var(--accent); border:2px solid var(--surface)}
+.vo-val{flex:none; width:3.6em; text-align:right; font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums}
+
+.vo-phase{flex:none; font-size:13px; color:var(--muted)}
+.vo-phase.ok{color:var(--accent)}
+.vo-phase.busy{color:var(--warn)}
+.vo-phase.bad{color:var(--danger)}
+.vo-actions{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.vo-btn{font:inherit; font-size:13px; cursor:pointer; padding:5px 14px; border-radius:9px; border:1px solid var(--line); background:var(--surface); color:var(--text)}
+.vo-btn:hover{border-color:var(--accent)}
+.vo-btn.primary{border-color:var(--accent); background:color-mix(in srgb, var(--accent) 14%, var(--surface))}
+.vo-btn[hidden]{display:none}
+.vo-check{display:inline-flex; align-items:center; gap:6px; margin-left:auto; font-size:13px; color:var(--muted); cursor:pointer}
+.vo-check input{accent-color:var(--accent); width:15px; height:15px; margin:0}
+
+.vo-foot{display:flex; flex-direction:column; gap:8px; margin-top:2px}
+.vo-preview{font:inherit; font-size:14px; cursor:pointer; align-self:flex-start; padding:8px 20px; border-radius:10px; border:1px solid var(--accent); background:color-mix(in srgb, var(--accent) 14%, var(--surface)); color:var(--text)}
+.vo-preview:hover{background:color-mix(in srgb, var(--accent) 22%, var(--surface))}
+.vo-preview:disabled{cursor:progress; opacity:.6}
+.vo-hint{margin:0; font-size:12.5px; line-height:1.55; color:var(--muted)}
+.vo-saved{margin:0; min-height:1.2em; font-size:12.5px; color:var(--accent)}

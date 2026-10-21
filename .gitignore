@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+out.wav
+out.mp3
+refs/
+.DS_Store
+Thumbs.db
+.env

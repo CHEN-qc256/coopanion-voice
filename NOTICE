@@ -1,0 +1,36 @@
+coopanion-voice
+Copyright (C) 2026 CHEN-qc256 and contributors
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+Affero General Public License as published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with this program.
+If not, see <https://www.gnu.org/licenses/>.
+
+---
+
+Third-party notices
+
+Coopanion — https://github.com/Pal-AI-Lab/Coopanion
+  Desktop pet application by Pal AI Lab, AGPL-3.0-or-later.
+  This repository is an extension of its `packages/cortico-world-desktop-pet` World: the page protocol
+  (`{t:'say', beats}`, `{t:'voice'}`, the pet's socket), the configuration shape and the menu conventions
+  are taken from it. Files here are either new or described in docs/integration.md as changes to it.
+
+Cortico — https://github.com/Pal-AI-Lab/Cortico
+  The framework Coopanion runs on (MIT). Not vendored here; nothing in this repository links to it.
+
+GPT-SoVITS — https://github.com/RVC-Boss/GPT-SoVITS
+  MIT. The local speech service the default backend talks to. No weights, models or reference audio are
+  included in this repository; you point `refDir` / `apiBase` at your own installation.
+
+Audio pitch shifting
+  The granular overlap-add in web/player.js follows the classic OLA time-stretch idea; no third-party
+  audio library is used or bundled.
+
+This repository contains no model weights, no reference recordings and no API keys.
