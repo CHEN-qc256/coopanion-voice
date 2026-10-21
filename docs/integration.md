@@ -150,29 +150,37 @@ private async speak(args) {
 }
 ```
 
-### 3.4 所有气泡都念：先发气泡，再补音频
+### 3.4 所有气泡都念：合成完再发气泡
 
 ```ts
-// say()
+// say()：先把每段合成好，再把它们挂在这条消息上一起发出去
 const aloud = spoken && readsOut(v, 'say') && !!this.tts.voices.length;
-const out = aloud ? beats.map((b) => ({ ...b, voicePending: !!b.text.trim() })) : beats;
+const clips = aloud ? await this.clipsOf(beats.map((b) => b.text), v) : [];
+const out = aloud ? beats.map((b, i) => (clips[i] ? { ...b, voice: clips[i] } : b)) : beats;
 const id = nextId('s');
 if (spoken && !this.server.sendPet({ t: 'say', id, beats: out })) return this.notConnected('pet_say');
-if (aloud) this.attachBeats(id, beats, v);
 
-private attachBeats(id, beats, v) {
-  beats.forEach((b, i) => {
-    if (!b.text.trim()) return;
-    void this.tts.speak({ text: b.text, voice: v.voice, speed: v.speed, lang: v.textLang }).then((clip) => {
-      this.server.sendPet({ t: 'voice', id, beat: i, url: `/api/voice/${this.audio.put(clip.bytes)}`, seconds: clip.seconds });
-    }, (err) => this.log?.warn(`语音合成失败:${(err as Error).message}`));
-  });
+/** 逐段合成，一次一个（TtsClient 内部串行，不抢显卡）；失败的那段是 null，气泡照出，只是没声。 */
+private async clipsOf(texts: string[], v) {
+  const out: Array<{ url: string; seconds: number } | null> = [];
+  for (const text of texts) {
+    if (!text.trim()) { out.push(null); continue; }
+    try {
+      const clip = await this.tts.speak({ text, voice: v.voice, speed: v.speed, lang: v.textLang });
+      out.push({ url: `/api/voice/${this.audio.put(clip.bytes)}`, seconds: clip.seconds });
+    } catch (err) { this.log?.warn(`语音合成失败:${(err as Error).message}`); out.push(null); }
+  }
+  return out;
 }
 
-// askUser() 与 dialog() 用同一个 tts.speak，只是不带 beat：
-if (readsOut(v, 'ask')) void this.tts.speak({ text: question, voice: v.voice, speed: v.speed })
-  .then((clip) => this.server.sendPet({ t: 'voice', id, url: `/api/voice/${this.audio.put(clip.bytes)}` }));
+// askUser() 与 dialog() 同理：合成好再 sendPet，把 voice 挂在消息上
+const clip = readsOut(v, 'ask') ? (await this.clipsOf([question], v))[0] : null;
+this.server.sendPet({ t: 'ask', id, question, options, own, ...(clip ? { voice: clip } : {}) });
 ```
+
+不要"先发气泡、再补一条 `{t:'voice'}`"：那样页面必须设一个等待上限，而任何超过上限的句子都会出现
+"字说完了声音才追上"甚至干脆没声。让发送等合成，代价是气泡晚一两秒，换来字音严格对齐——气泡和
+第一帧声音同时开始，念完才进下一段。
 
 ### 3.5 快照与设置接口
 
@@ -268,24 +276,18 @@ const voice = createPlayer({ audio: () => sfx.outputVoice(), onFrame: () => body
 // prefs
 if (p.voiceOut) { prefs.voiceOut = { ...prefs.voiceOut, ...p.voiceOut }; voice.set(prefs.voiceOut); }
 
-// 收到附带的音频
-case 'voice': attachVoice(m); break;
-
-function attachVoice(m) {
-  const it = item;
-  if (!it || it.id !== m.id) return;                       // 这一条已经过去了
-  if (it.voice) return;
-  if (typeof m.beat === 'number' && it.kind !== 'say') return;
-  if (typeof m.beat === 'number' && (it.i !== m.beat || it.beatDone)) return;
-  it.voicePending = false;
-  it.voice = voice.play(m.url);                            // 迟到的声音不重新给文字计时
-}
+// 声音随消息一起来，不需要第二条消息
+case 'say': queue.push({ kind: 'say', id: m.id, beats: m.beats, i: -1 }); break;
+case 'ask': queue.push({ kind: 'ask', id: m.id, question: m.question, options: m.options || [], own: m.own !== false, clip: m.voice }); break;
+case 'dialog': queue.push({ kind: 'dialog', id: m.id, d: m }); break;
 ```
 
 打字与停留（`stepDialog` / `typeText`）：
 
-- beat 有 `voice.url`（`pet_speak`）→ 文字按 `clip.elapsed / clip.seconds` 铺开；
-- beat 有 `voicePending` → 正常打字，打完等音频到（最多 4 秒），到了就播，念完才进下一段。
+- `say` 的 beat 有 `voice.url` → 开气泡的同一帧 `voice.play(url)`，文字按 `clip.elapsed / clip.seconds` 铺开，
+  `clip.ended` 之前不进入下一段；
+- `ask` / `dialog` 的 `voice.url` → 开气泡时开始播；`stepTalkRead` 在录音播完前不结束这一步。
+- 播放器里 `clip.ended` 是唯一"这一段说完了"的信号；不要用字数或定时器替代它，那正是截断的来源。
 
 菜单项：
 
