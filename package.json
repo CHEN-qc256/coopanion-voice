@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Pluggable text-to-speech for the Coopanion desktop pet: local GPT-SoVITS, OpenAI, or any HTTP TTS API, with a settings panel, a browser player (volume/pitch) and a supervisor that starts the local model with the pet.",
-  "license": "AGPL-3.0-or-later",
+  "license": "MIT",
   "engines": {
     "node": ">=20"
   },

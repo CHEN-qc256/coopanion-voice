@@ -1,16 +1,7 @@
 coopanion-voice
-Copyright (C) 2026 CHEN-qc256 and contributors
+Copyright (c) 2026 CHEN-qc256 and contributors
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU
-Affero General Public License as published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
-the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
-General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License along with this program.
-If not, see <https://www.gnu.org/licenses/>.
+Licensed under the MIT License. See LICENSE for the full text.
 
 ---
 
@@ -19,8 +10,9 @@ Third-party notices
 Coopanion — https://github.com/Pal-AI-Lab/Coopanion
   Desktop pet application by Pal AI Lab, AGPL-3.0-or-later.
   This repository is an extension of its `packages/cortico-world-desktop-pet` World: the page protocol
-  (`{t:'say', beats}`, `{t:'voice'}`, the pet's socket), the configuration shape and the menu conventions
+  (`{t:'say', beats}`, the pet's socket), the configuration shape and the menu conventions
   are taken from it. Files here are either new or described in docs/integration.md as changes to it.
+  Only this repository is MIT-licensed; the upstream Coopanion project keeps its own license.
 
 Cortico — https://github.com/Pal-AI-Lab/Cortico
   The framework Coopanion runs on (MIT). Not vendored here; nothing in this repository links to it.

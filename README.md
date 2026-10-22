@@ -13,7 +13,7 @@
 | 问题 | 这个仓库的做法 |
 |---|---|
 | 各家 TTS 的请求格式完全不同 | `TtsBackend` 一个接口，内置 GPT-SoVITS / OpenAI / 任意 HTTP 三种 |
-| 合成要 1–3 秒，气泡不能干等 | 「先显示、后附音」：气泡立即出现，音频好了再补（`pet_speak` 例外，它先合成、字音严格同步） |
+| 合成要 1–3 秒，不能让气泡先跑 | 「先合成、再发送」：声音和第一帧字同时开始，没有等待上限，不会出现「只念一半」 |
 | 本地模型要 20–60 秒加载 | `LocalService` 随桌宠拉起、等它就绪、退出时只关自己启动的那个 |
 | 同一句话反复合成 | `TtsClient` 串行队列 + 内容缓存（32 条） |
 | 系统代理把 `127.0.0.1` 也劫走 | `localFetch` 直连本机，永不经过代理 |
@@ -198,8 +198,8 @@ const azure = httpTts({
 
 ## 许可与致谢
 
-- 本仓库：**AGPL-3.0-or-later**（与 Coopanion 一致），见 [LICENSE](LICENSE) 与 [NOTICE](NOTICE)。
-- [Coopanion](https://github.com/Pal-AI-Lab/Coopanion) 与 [Cortico](https://github.com/Pal-AI-Lab/Cortico) — Pal AI Lab，MIT / AGPL-3.0；本模块是它们的扩展，接口（World、页面协议）沿用其约定。
+- 本仓库：**MIT**，见 [LICENSE](LICENSE) 与 [NOTICE](NOTICE)。
+- [Coopanion](https://github.com/Pal-AI-Lab/Coopanion) 与 [Cortico](https://github.com/Pal-AI-Lab/Cortico) — Pal AI Lab，AGPL-3.0-or-later / MIT；本模块是它们的扩展，接口（World、页面协议）沿用其约定。上游项目各自保持原有许可，本仓库的 MIT 只覆盖这里的文件。
 - [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS) — MIT，本机语音合成的后端。
 - 变调的思路来自经典的颗粒合成 / OLA 时间伸缩，没有第三方音频库。
 
@@ -209,4 +209,4 @@ const azure = httpTts({
 
 `coopanion-voice` gives the Coopanion desktop pet a real voice. The Node side is a small, dependency-free TTS client with a pluggable backend (GPT-SoVITS locally, OpenAI-compatible endpoints, or any HTTP API), a serial queue with a content cache, a content-addressed audio bank, and a supervisor that starts a local model with the pet and stops the one it started. The browser side is a player with volume and a pitch shift that keeps the pace, plus a settings page at `/voiceout`. Nothing here ships a model: point `refDir` / `apiBase` at your own service, or write a ~40-line backend for the API you have. See [docs/backends.md](docs/backends.md) and [docs/integration.md](docs/integration.md).
 
-Licensed under AGPL-3.0-or-later.
+Licensed under the MIT License.
